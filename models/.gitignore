@@ -1,0 +1,5 @@
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.pkl
