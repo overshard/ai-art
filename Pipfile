@@ -14,7 +14,7 @@ torchvision = { version = "*", index = "pytorch" }
 einops = "*"
 kornia = "*"
 pillow = "*"
-numpy = "*"
+numpy = "<1.22"
 requests = "*"
 tqdm = "*"
 regex = "*"
