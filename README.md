@@ -20,23 +20,24 @@ most basic of GPUs though.
 Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) for
 your OS.
 
-Download the latest release of this repository from GitHub and put it anywhere
-you want.
+Download the latest release of [this repository from GitHub](https://github.com/overshard/ai-art/archive/refs/heads/master.zip)
+and put it anywhere you want.
 
 Run the `bin/sh/build.sh` or `bin/cmd/build.cmd` script based on your respective
 platform (the first for Linux and MacOS, the second for Windows).
 
-And you're good to go! You'll get a painting of a potato in your outputs folder
-if it works. You can change settings and the prompt in `configs/config.json`.
+And you're good to go! You can now run `bin/sh/generate.sh` or `bin/cmd/generate.cmd`
+and you'll get a painting of a potato in your outputs folder if it works. You
+can change settings and the prompt in `configs/config.json`.
 
 
 ## Other datasets
 
-Download the latest ImageNet dataset from [ImageNet](http://image-net.org/) or
-using the below links. Everything is configured by default for
-`vqgan_imagenet_f16_16384.ckpt` so if you click the below download, save the
-file as `vqgan_imagenet_f16_16384.ckpt` and put it in the `models` folder you
-can start immediately by running a generate script in the `bin` folder.
+Everything is configured by default for `vqgan_imagenet_f16_16384.ckpt` so if
+you click the below download, save the file as `vqgan_imagenet_f16_16384.ckpt`
+and put it in the `models` folder you can start immediately by running a generate
+script in the `bin` folder. Note that the `build` command will auto download
+this dataset.
 
 <table>
   <thead>
