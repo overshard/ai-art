@@ -1,6 +1,6 @@
 import os
 
-from core.clip.clip import available_models
+from clip.clip import available_models
 
 from typing import List
 from dataclasses import dataclass, field
