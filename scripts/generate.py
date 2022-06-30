@@ -9,7 +9,7 @@ import torchvision.transforms.functional as TF
 from PIL import Image
 from tqdm import tqdm
 
-from core.clip import clip
+from clip import clip
 from core.schemas import Config
 from core.utils import (
     MakeCutouts,
