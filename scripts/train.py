@@ -18,12 +18,16 @@ from core.taming.models import vqgan
 
 
 PARAMS: TrainConfig = None
-DEVICE = torch.device(os.environ.get("DEVICE", 'cuda' if torch.cuda.is_available() else 'cpu'))
+DEVICE = torch.device(
+    os.environ.get("DEVICE", "cuda" if torch.cuda.is_available() else "cpu")
+)
 
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-c", "--config", type=str, required=True, help="Path to configuration file.")
+    parser.add_argument(
+        "-c", "--config", type=str, required=True, help="Path to configuration file."
+    )
     return parser.parse_args()
 
 
@@ -35,21 +39,24 @@ def save_model(model, optimizers, epoch, path):
         "optimizer_states": [
             optimizers[0].state_dict(),
             optimizers[1].state_dict(),
-        ]
+        ],
     }
     torch.save(save_dict, path)
     tqdm.write(f"Checkpoint saved in {path}")
 
 
 def main():
-    dataset = ImageFolder(PARAMS.data_dir, T.Compose(
-        [
-            T.Lambda(lambda img: img.convert('RGB') if img.mode != 'RGB' else img),
-            T.Resize(PARAMS.params["embed_dim"]),
-            T.CenterCrop(PARAMS.params["embed_dim"]),
-            T.ToTensor()
-        ]
-    ))
+    dataset = ImageFolder(
+        PARAMS.data_dir,
+        T.Compose(
+            [
+                T.Lambda(lambda img: img.convert("RGB") if img.mode != "RGB" else img),
+                T.Resize(PARAMS.params["embed_dim"]),
+                T.CenterCrop(PARAMS.params["embed_dim"]),
+                T.ToTensor(),
+            ]
+        ),
+    )
     loader = DataLoader(dataset, PARAMS.batch_size, shuffle=True)
 
     PARAMS.params["model_dir"] = PARAMS.models_dir
@@ -61,7 +68,7 @@ def main():
     epoch = 0
 
     if PARAMS.resume_checkpoint:
-        save_dict = safe_load(PARAMS.resume_checkpoint, map_location='cpu')
+        save_dict = safe_load(PARAMS.resume_checkpoint, map_location="cpu")
         epoch = save_dict["epoch"]
         model.global_step = save_dict["global_step"]
         model.load_state_dict(save_dict["state_dict"])
@@ -86,11 +93,18 @@ def main():
             tqdm.write(f"Epoch: {epoch} | Batch: {i} | losses: {losses}")
 
             if i % 1000 == 0:
-                save_model(model, optimizers, epoch, f"{PARAMS.models_dir}/checkpoints/last.ckpt")
+                save_model(
+                    model,
+                    optimizers,
+                    epoch,
+                    f"{PARAMS.models_dir}/checkpoints/last.ckpt",
+                )
 
                 with torch.no_grad():
                     dec, _ = model(model.get_input(images, device=DEVICE))
-                    TF.to_pil_image(dec[0].cpu()).save(f"{PARAMS.output_dir}/training/{epoch}_{i}.png")
+                    TF.to_pil_image(dec[0].cpu()).save(
+                        f"{PARAMS.output_dir}/training/{epoch}_{i}.png"
+                    )
 
             model.global_step += 1
         epoch += 1
@@ -105,7 +119,7 @@ if __name__ == "__main__":
         exit(f"ERROR: {args.config} not found.")
 
     print(f"Loading configuration from '{args.config}'")
-    with open(args.config, 'r') as f:
+    with open(args.config, "r") as f:
         PARAMS = TrainConfig(**json.load(f))
 
     print(f"Running on {DEVICE}.")
