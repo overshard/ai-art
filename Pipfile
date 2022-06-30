@@ -3,20 +3,12 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
-[[source]]
-url = "https://download.pytorch.org/whl/cu113"
-verify_ssl = true
-name = "pytorch"
-
 [packages]
-torch = { version = "*", index = "pytorch" }
-torchvision = { version = "*", index = "pytorch" }
+torch = "*"
+torchvision = "*"
 einops = "*"
 kornia = "*"
-pillow = "*"
-numpy = "<1.22"
 requests = "*"
-tqdm = "*"
 regex = "*"
 ftfy = "*"
 
@@ -26,4 +18,4 @@ isort = "*"
 black = "*"
 
 [requires]
-python_version = "3.10"
+python_version = "3.7"
