@@ -54,7 +54,7 @@ def initialize_image(model):
     sideX, sideY = toksX * f, toksY * f
 
     def encode(img):
-        pil_image = img.convert("RGB").resize((sideX, sideY), Image.LANCZOS)
+        pil_image = img.convert("RGB").resize((sideX, sideY), Image.Resampling.LANCZOS)
         pil_tensor = TF.to_tensor(pil_image)
         z, *_ = model.encode(pil_tensor.to(DEVICE).unsqueeze(0) * 2 - 1)
         return z
