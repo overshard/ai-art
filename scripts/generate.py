@@ -187,7 +187,7 @@ def main():
         PARAMS.vqgan_config, PARAMS.vqgan_checkpoint, PARAMS.models_dir
     ).to(DEVICE)
     perceptor = (
-        clip.load(PARAMS.clip_model, device=DEVICE, root=PARAMS.models_dir)[0]
+        clip.load(PARAMS.clip_model, device=DEVICE, download_root=PARAMS.models_dir)[0]
         .eval()
         .requires_grad_(False)
         .to(DEVICE)
