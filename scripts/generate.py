@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import uuid
 
 import numpy as np
 import torch
@@ -38,6 +39,7 @@ NORMALIZE = Normalize(
     std=[0.26862954, 0.26130258, 0.27577711],
     device=DEVICE,
 )
+UUID = str(uuid.uuid4())
 
 
 def parse_args():
@@ -133,6 +135,7 @@ def checkin(z, losses, **kwargs):
     filename = "output"
     if len(PARAMS.prompts):
         filename = "_".join(PARAMS.prompts).replace(" ", "_")
+        filename = f"{UUID}_{filename}"
 
     path = f"{PARAMS.output_dir}/{filename}.png"
     TF.to_pil_image(out[0].cpu()).save(path)
