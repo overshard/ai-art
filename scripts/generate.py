@@ -134,8 +134,8 @@ def checkin(z, losses, **kwargs):
 
     filename = "output"
     if len(PARAMS.prompts):
-        filename = "_".join(PARAMS.prompts).replace(" ", "_")
-        filename = f"{UUID}_{filename}"
+        filename = "-".join(PARAMS.prompts).replace(" ", "-")
+        filename = f"{UUID}--{filename}"
 
     path = f"{PARAMS.output_dir}/{filename}.png"
     TF.to_pil_image(out[0].cpu()).save(path)
