@@ -7,7 +7,7 @@ updated, and expanded upon version of
 
 ## Samples
 
-For samples check out the [AI Assisted](https://isaacbythewood.com/art) section
+For samples check out the [AI Generated](https://isaacbythewood.com/art) section
 on the art page on my website.
 
 
@@ -20,46 +20,27 @@ most basic of GPUs though.
 Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) for
 your OS.
 
-Download the latest release of [this repository from GitHub](https://github.com/overshard/ai-art/archive/refs/heads/master.zip)
-and put it anywhere you want.
+### Quick start usage
 
-Run the `bin/sh/build.sh` or `bin/cmd/build.cmd` script based on your respective
-platform (the first for Linux and MacOS, the second for Windows).
-
-And you're good to go! You can now run `bin/sh/generate.sh` or `bin/cmd/generate.cmd`
-and you'll get a painting of a potato in your outputs folder if it works. You
-can change settings and the prompt in `configs/config.json`.
+    docker run -it --rm --gpus all -p 3000:3000 -v ${pwd}/ai-art:/data overshard/ai-art
 
 
-## Other datasets
+### Development usage
 
-Everything is configured by default for `vqgan_imagenet_f16_16384.ckpt` so if
-you click the below download, save the file as `vqgan_imagenet_f16_16384.ckpt`
-and put it in the `models` folder you can start immediately by running a generate
-script in the `bin` folder. Note that the `build` command will auto download
-this dataset.
+Get the latest version of this project from GitHub:
 
-<table>
-  <thead>
-    <tr>
-      <th>Dataset</th>
-      <th>Link</th>
-      <th>Config</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>ImageNet (f=16), 16384</td>
-      <td><a href="https://heibox.uni-heidelberg.de/d/a7530b09fed84f80a887/files/?p=%2Fckpts%2Flast.ckpt&dl=1">vqgan_imagenet_f16_16384.ckpt</a></td>
-      <td>configs/models/vqgan_imagenet_f16_16384.json</td>
-    </tr>
-    <tr>
-      <td>ImageNet (f=16), 1024</td>
-      <td><a href="https://heibox.uni-heidelberg.de/d/8088892a516d4e3baf92/files/?p=%2Fckpts%2Flast.ckpt&dl=1">vqgan_imagenet_f16_1024.ckpt</a></td>
-      <td>configs/models/vqgan_imagenet_f16_1024.json</td>
-    </tr>
-  </tbody>
-</table>
+    git clone https://github.com/overshard/ai-art.git
+
+Then run it with:
+
+    docker build --tag overshard/ai-art .
+    docker run -it --rm --gpus all -p 3000:3000 -v ${pwd}/data:/data overshard/ai-art
+
+If you are using a docker container on Windows to develop this project like I am
+then you can use something like this to mount a directory on the host system
+from your development container:
+
+    docker run -it --rm --gpus all -p 3000:3000 -v "/C/Users/Isaac Bythewood/Documents/AI-Art:/data" overshard/ai-art
 
 
 ## Image sizes
@@ -78,9 +59,6 @@ go above the number of pixels your GPU's VRAM supports, for example you could
 do ultrawide images with 6 GB of ram at "384x128" or do tall images at "128x384"
 and so on. You do not have to use numbers with a power of 2, "300x100" is also
 perfectly valid.
-
-Don't worry about small image sizes, you can scale them up later using a variety
-of tools. I generate all mine at 256x256 and resize them later.
 
 
 ## Usage
@@ -118,7 +96,7 @@ simplify things as much as possible.
 | `cutn`                 | int            | Number of cuts                                                                 |
 | `cut_pow`              | float          | Cut power                                                                      |
 | `seed`                 | int            | Seed (-1 for random seed)                                                      |
-| `optimizer`            | str            | Optimiser ["Adam","AdamW","Adagrad","Adamax","DiffGrad","AdamP","RAdam"]       |
+| `optimizer`            | str            | Optimiser ["Adam","AdamW","Adagrad","Adamax"]                                  |
 | `nwarm_restarts`       | int            | Number of time the learning rate is reseted (-1 to disable LR decay)           |
 | `augments`             | List[str]      | Enabled augments ["Ji","Sh","Gn","Pe","Ro","Af","Et","Ts","Cr","Er","Re","Hf"] |
 

@@ -6,9 +6,9 @@ from typing import List
 from dataclasses import dataclass, field
 
 
-INIT_NOISES = ['', 'gradient', 'pixels', 'fractal']
-OPTIMIZERS = ['Adam', 'AdamW', 'Adagrad', 'Adamax', 'DiffGrad', 'AdamP', 'RAdam']
-AUGMENTS = ['Ji', 'Sh', 'Gn', 'Pe', 'Ro', 'Af', 'Et', 'Ts', 'Cr', 'Er', 'Re', 'Hf']
+INIT_NOISES = ["", "gradient", "pixels", "fractal"]
+OPTIMIZERS = ["Adam", "AdamW", "Adagrad", "Adamax"]
+AUGMENTS = ["Ji", "Sh", "Gn", "Pe", "Ro", "Af", "Et", "Ts", "Cr", "Er", "Re", "Hf"]
 
 
 @dataclass
@@ -23,29 +23,33 @@ class Config:
     init_noise: str = "gradient"
     init_weight: float = 0.0
     mse_decay_rate: float = 0.0
-    output_dir: str = "./outputs"
-    models_dir: str = "./models"
-    clip_model: str = 'ViT-B/16'
-    vqgan_checkpoint: str = './models/vqgan_imagenet_f16_16384.ckpt'
-    vqgan_config: str = './configs/models/vqgan_imagenet_f16_16384.json'
+    output_dir: str = "/data/outputs"
+    models_dir: str = "/data/models"
+    clip_model: str = "ViT-B/16"
+    vqgan_checkpoint: str = "/data/models/vqgan_imagenet_f16_16384.ckpt"
+    vqgan_config: str = "/data/models/vqgan_imagenet_f16_16384.json"
     noise_prompt_seeds: List[int] = field(default_factory=lambda: [])
     noise_prompt_weights: List[float] = field(default_factory=lambda: [])
     step_size: float = 0.1
     cutn: int = 32
     cut_pow: float = 1.0
     seed: int = -1
-    optimizer: str = 'Adam'
+    optimizer: str = "Adam"
     nwarm_restarts: int = -1
-    augments: List[str] = field(default_factory=lambda: ['Af', 'Pe', 'Ji', 'Er'])
+    augments: List[str] = field(default_factory=lambda: ["Af", "Pe", "Ji", "Er"])
 
     def __post_init__(self):
         if self.init_noise not in INIT_NOISES:
-            exit(f"ERROR: \"init_noise\": {self.init_noise}, <-- Noise algorithm not found.\n"
-                 f"Currently only the following values are supported: {INIT_NOISES}.")
+            exit(
+                f'ERROR: "init_noise": {self.init_noise}, <-- Noise algorithm not found.\n'
+                f"Currently only the following values are supported: {INIT_NOISES}."
+            )
 
         if self.optimizer not in OPTIMIZERS:
-            exit(f"ERROR: \"optimizer\": {self.optimizer}, <-- Optimizer not found.\n"
-                 f"Currently only the following values are supported: {OPTIMIZERS}.")
+            exit(
+                f'ERROR: "optimizer": {self.optimizer}, <-- Optimizer not found.\n'
+                f"Currently only the following values are supported: {OPTIMIZERS}."
+            )
 
         os.makedirs(self.models_dir, exist_ok=True)
         os.makedirs(self.output_dir, exist_ok=True)
@@ -54,20 +58,27 @@ class Config:
 
         models = available_models()
         if not os.path.exists(self.clip_model) and self.clip_model not in models:
-            exit(f"ERROR: \"clip_model\": {self.clip_model}, <-- Model not found.\n"
-                 f"Make sure it is a valid path to a downloaded model or match one of {models}.")
+            exit(
+                f'ERROR: "clip_model": {self.clip_model}, <-- Model not found.\n'
+                f"Make sure it is a valid path to a downloaded model or match one of {models}."
+            )
 
         if not os.path.exists(self.vqgan_config):
-            exit(f"ERROR: \"vqgan_config\": {self.vqgan_config}, <-- Configuration file not found.\n"
-                 f"Make sure the path is correct (Multiple config files are available in the `./configs/models` directory).")
+            exit(
+                f'ERROR: "vqgan_config": {self.vqgan_config}, <-- Configuration file not found.\n'
+                f"Make sure the path is correct (Multiple config files are available in the `./configs/models` directory)."
+            )
 
         if not os.path.exists(self.vqgan_checkpoint):
-            exit(f"ERROR: \"vqgan_checkpoint\": {self.vqgan_checkpoint}, <-- Model not found.\n"
-                 f"Make sure the path is correct and that you have downloaded the model (Refer to the README).")
+            exit(
+                f'ERROR: "vqgan_checkpoint": {self.vqgan_checkpoint}, <-- Model not found.\n'
+                f"Make sure the path is correct and that you have downloaded the model (Refer to the README)."
+            )
 
         if self.pixelart:
-            print("Enabling PixelArt mode. It is recommended to add 'pixelart' to your prompt.")
-
+            print(
+                "Enabling PixelArt mode. It is recommended to add 'pixelart' to your prompt."
+            )
 
     def __str__(self):
         _str = (

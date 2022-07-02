@@ -21,8 +21,11 @@ class Normalize:
         device (torch.device,optional):
             The device of tensors to which the transform will be applied.
     """
-    def __init__(self, mean, std, inplace=False, dtype=torch.float, device='cpu'):
-        self.mean = torch.as_tensor(mean, dtype=dtype, device=device)[None, :, None, None]
+
+    def __init__(self, mean, std, inplace=False, dtype=torch.float, device="cpu"):
+        self.mean = torch.as_tensor(mean, dtype=dtype, device=device)[
+            None, :, None, None
+        ]
         self.std = torch.as_tensor(std, dtype=dtype, device=device)[None, :, None, None]
         self.inplace = inplace
 

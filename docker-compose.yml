@@ -3,29 +3,8 @@ version: "3"
 services:
   generate:
     build: .
-    command: python -m scripts.generate -c /configs/config.json
     volumes:
-      - ./models:/models
-      - ./configs:/configs
-      - ./core:/app/core
-      - ./scripts:/app/scripts
-      - ./outputs:/outputs
-    environment:
-      - DEVICE=cuda
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - capabilities: [gpu]
-  train:
-    build: .
-    command: python -m scripts.train -c /configs/models/vqgan_custom_docker.json
-    volumes:
-      - ./models:/models
-      - ./configs:/configs
-      - ./core:/app/core
-      - ./scripts:/app/scripts
-      - ./outputs:/outputs
+      - /c/users/isaac bythewood/desktop/art:/data
     environment:
       - DEVICE=cuda
     deploy:

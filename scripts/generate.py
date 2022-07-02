@@ -7,10 +7,10 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 import torchvision.transforms.functional as TF
+from clip import clip
 from PIL import Image
 from tqdm import tqdm
 
-from clip import clip
 from core.schemas import Config
 from core.utils import (
     MakeCutouts,
@@ -29,6 +29,7 @@ from core.utils.noises import (
 )
 from core.utils.prompt import Prompt, parse_prompt
 
+from .check import check_files_and_folders
 
 PARAMS: Config = None
 DEVICE = torch.device(
@@ -232,6 +233,8 @@ def main():
 
 
 if __name__ == "__main__":
+    check_files_and_folders()
+
     args = parse_args()
 
     if not os.path.exists(args.config):
