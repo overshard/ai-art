@@ -131,7 +131,8 @@
        */
       document.addEventListener('DOMContentLoaded', function() {
         setInterval(function() {
-          document.querySelector('#latest-output').src = '/latest_output';
+          // add random number to prevent caching
+          document.querySelector('#latest-output').src = '/latest_output?r=' + Math.random();
         }, 5000);
       });
       </script>
