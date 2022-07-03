@@ -9,6 +9,9 @@ import subprocess
 
 from flask import Blueprint, Flask, render_template, send_from_directory, request, redirect, send_file
 
+from .check import check_files_and_folders
+
+
 web = Blueprint("web", __name__, template_folder="templates")
 
 
@@ -143,6 +146,8 @@ def latest_output():
 
 app = Flask(__name__)
 app.register_blueprint(web)
+
+check_files_and_folders()
 
 print("-----------------------------------------------------")
 print("")
