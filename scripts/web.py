@@ -87,7 +87,6 @@ def update_config():
     width: The width of the image. (is the first dimension of size list)
     height: The height of the image. (is the second dimension of size list)
     max_iterations: The number of iterations to run.
-    save_freq: The number of iterations between saving the image.
     """
 
     old_config = json.loads(open("/data/config.json", "r").read())
@@ -97,7 +96,6 @@ def update_config():
     width = request.form.get("width")
     height = request.form.get("height")
     max_iterations = request.form.get("max_iterations")
-    save_freq = request.form.get("save_freq")
 
     # get the init_image from the POST request if we have one
     init_image = request.files.get("init_image")
@@ -118,7 +116,6 @@ def update_config():
         "init_image": init_image,
         "size": [int(width), int(height)],
         "max_iterations": int(max_iterations),
-        "save_freq": int(save_freq),
     }
 
     # write the config to the config file

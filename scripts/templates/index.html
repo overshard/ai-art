@@ -25,7 +25,12 @@
           AI-Art
         </a>
         <div id="time-elapsed" class="text-white ms-auto fw-bolder"></div>
-        <button id="generate" class="btn btn-primary btn-sm ms-auto">Generate</button>
+        <div class="ms-auto d-flex">
+          <label class="text-white d-flex align-items-center">
+            <input type="checkbox" id="continuous-gen" value="true" class="me-2"> Continuous generation
+          </label>
+          <button id="generate" class="btn btn-primary btn-sm ms-4">Generate</button>
+        </div>
       </div>
     </nav>
 
@@ -66,21 +71,11 @@
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col">
-                <div class="form-floating mb-3">
-                  <input type="number" id="max_iterations" name="max_iterations" value="{{ current_config.max_iterations }}" class="form-control" placeholder="Max iterations">
-                  <label for="max_iterations">Max iterations</label>
-                </div>
-              </div>
-              <div class="col">
-                <div class="form-floating mb-3">
-                  <input type="number" id="save_freq" name="save_freq" value="{{ current_config.save_freq }}" class="form-control" placeholder="Save frequency">
-                  <label for="save_freq">Save frequency</label>
-                </div>
-              </div>
+            <div class="form-floating mb-3">
+              <input type="number" id="max_iterations" name="max_iterations" value="{{ current_config.max_iterations }}" class="form-control" placeholder="Max iterations">
+              <label for="max_iterations">Max iterations</label>
             </div>
-            <button id="update" type="submit" class="btn btn-success">Update</button>
+            <button id="update" type="submit" class="btn btn-success">Update config</button>
           </form>
           <div class="text-center w-100 mb-3">
             <img id="latest-output" class="img-fluid" src="/latest_output">
@@ -99,9 +94,7 @@
        */
 
       document.addEventListener('DOMContentLoaded', function() {
-        document.querySelector('#generate').addEventListener('click', function(e) {
-          e.preventDefault();
-          e.stopPropagation();
+        const generateImage = () => {
           document.querySelector('#generate').disabled = true;
           document.querySelector('#update').disabled = true;
           document.querySelector('#generate').innerText = 'Generating...';
@@ -121,7 +114,14 @@
               document.querySelector('#output').src = '/outputs';
               document.querySelector('#time-elapsed').innerText = '';
               clearInterval(timer);
+              if (document.querySelector('#continuous-gen').checked) {
+                generateImage();
+              }
             });
+        };
+
+        document.querySelector('#generate').addEventListener('click', function() {
+          generateImage();
         });
       });
     </script>
