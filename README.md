@@ -1,4 +1,6 @@
-# ai-art
+# AI-Art
+
+![AI-Art Screenshot](./Screenshot.webp)
 
 Art generation using VQGAN + CLIP using docker containers. A simplified,
 updated, and expanded upon version of
