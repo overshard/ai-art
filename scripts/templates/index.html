@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>AI-Art</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
+    <style>
+      body {
+        min-height: 100vh;
+      }
+
+      #output {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body class="d-flex flex-column">
+    <nav class="navbar navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand display-5" href="https://github.com/overshard/ai-art">
+          AI-Art
+        </a>
+        <div id="time-elapsed" class="text-white ms-auto fw-bolder"></div>
+        <button id="generate" class="btn btn-primary btn-sm ms-auto">Generate</button>
+      </div>
+    </nav>
+
+    <div class="container-fluid d-flex flex-grow-1">
+      <div class="row flex-grow-1">
+        <div class="col-sm-8 d-flex p-0">
+          <iframe id="output" src="/outputs"></iframe>
+        </div>
+        <div class="col-sm-4 bg-black overflow-auto">
+          <form method="POST" action="/update_config" class="my-4" enctype="multipart/form-data">
+            <div class="form-floating mb-3">
+              <input type="text" id="prompts" name="prompts" value="{{ current_config.prompts }}" class="form-control" placeholder="Prompts">
+              <label for="prompts">Prompts</label>
+            </div>
+            <div class="mb-3">
+              <label for="formFile" class="form-label text-white">Initial image</label>
+              <input class="form-control mb-1" type="file" id="init_image" name="init_image" accept="image/*">
+            </div>
+            {% if current_config.init_image != "" %}
+            <div class="mb-3 row">
+              <div class="small text-white mb-2 col"><span class="badge bg-primary">Using</span> {{ current_config.init_image }}</div>
+              <label class="text-white d-flex align-items-center small col">
+                <input type="checkbox" name="clear_init_image" value="true" class="me-2"> Clear image
+              </label>
+            </div>
+            {% endif %}
+            <div class="row">
+              <div class="col">
+                <div class="form-floating mb-3">
+                  <input type="number" id="width" name="width" value="{{ current_config.size[0] }}" class="form-control" placeholder="Width">
+                  <label for="width">Width</label>
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-floating mb-3">
+                  <input type="number" id="height" name="height" value="{{ current_config.size[1] }}" class="form-control" placeholder="Height">
+                  <label for="height">Height</label>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="form-floating mb-3">
+                  <input type="number" id="max_iterations" name="max_iterations" value="{{ current_config.max_iterations }}" class="form-control" placeholder="Max iterations">
+                  <label for="max_iterations">Max iterations</label>
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-floating mb-3">
+                  <input type="number" id="save_freq" name="save_freq" value="{{ current_config.save_freq }}" class="form-control" placeholder="Save frequency">
+                  <label for="save_freq">Save frequency</label>
+                </div>
+              </div>
+            </div>
+            <button id="update" type="submit" class="btn btn-success">Update</button>
+          </form>
+          <div class="text-center w-100 mb-3">
+            <img id="latest-output" class="img-fluid" src="/latest_output">
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+    <script>
+      /**
+       * On clicking #generate disable the button, change the text to "Generating...", and
+       * and when it's complete take the output and display it in #generate-output and
+       * enable the button again.
+       */
+
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('#generate').addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          document.querySelector('#generate').disabled = true;
+          document.querySelector('#update').disabled = true;
+          document.querySelector('#generate').innerText = 'Generating...';
+          // put total elapsed time in #time-elapsed until complete, then wipe it
+          const start = new Date().getTime();
+          const timer = setInterval(function() {
+            document.querySelector('#time-elapsed').innerText = 'Elapsed: ' + (new Date().getTime() - start) / 1000 + 's';
+          }, 1000);
+          fetch('/generate')
+            .then(function(response) {
+              return response.text();
+            })
+            .then(function(data) {
+              document.querySelector('#generate').disabled = false;
+              document.querySelector('#update').disabled = false;
+              document.querySelector('#generate').innerText = 'Generate';
+              document.querySelector('#output').src = '/outputs';
+              document.querySelector('#time-elapsed').innerText = '';
+              clearInterval(timer);
+            });
+        });
+      });
+    </script>
+    <script>
+      /**
+       * Refresh the latest output every 5 seconds.
+       */
+      document.addEventListener('DOMContentLoaded', function() {
+        setInterval(function() {
+          document.querySelector('#latest-output').src = '/latest_output';
+        }, 5000);
+      });
+      </script>
+  </body>
+</html>
