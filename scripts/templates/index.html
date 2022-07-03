@@ -19,30 +19,15 @@
     </style>
   </head>
   <body class="d-flex flex-column">
-    <nav class="navbar navbar-dark bg-dark">
-      <div class="container-fluid">
-        <a class="navbar-brand display-5" href="https://github.com/overshard/ai-art">
-          AI-Art
-        </a>
-        <div id="time-elapsed" class="text-white ms-auto fw-bolder"></div>
-        <div class="ms-auto d-flex">
-          <label class="text-white d-flex align-items-center">
-            <input type="checkbox" id="continuous-gen" value="true" class="me-2"> Continuous generation
-          </label>
-          <button id="generate" class="btn btn-primary btn-sm ms-4">Generate</button>
-        </div>
-      </div>
-    </nav>
-
     <div class="container-fluid d-flex flex-grow-1">
       <div class="row flex-grow-1">
         <div class="col-sm-8 d-flex p-0">
           <iframe id="output" src="/outputs"></iframe>
         </div>
-        <div class="col-sm-4 bg-black overflow-auto">
+        <div class="col-sm-4 bg-black overflow-auto d-flex flex-column">
           <form method="POST" action="/update_config" class="my-4" enctype="multipart/form-data">
             <div class="form-floating mb-3">
-              <input type="text" id="prompts" name="prompts" value="{{ current_config.prompts }}" class="form-control" placeholder="Prompts">
+              <textarea type="text" id="prompts" name="prompts" class="form-control" style="height: 150px;">{{ current_config.prompts }}</textarea>
               <label for="prompts">Prompts</label>
             </div>
             <div class="mb-3">
@@ -75,9 +60,15 @@
               <input type="number" id="max_iterations" name="max_iterations" value="{{ current_config.max_iterations }}" class="form-control" placeholder="Max iterations">
               <label for="max_iterations">Max iterations</label>
             </div>
-            <button id="update" type="submit" class="btn btn-success">Update config</button>
+            <div class="ms-auto d-flex justify-content-between">
+              <button id="update" type="submit" class="btn btn-success btn-sm">Update</button>
+              <label class="text-white d-flex align-items-center">
+                <input type="checkbox" id="continuous-gen" value="true" class="me-2"> Continuous generation
+              </label>
+              <button id="generate" type="button" class="btn btn-primary btn-sm ms-4">Generate</button>
+            </div>
           </form>
-          <div class="text-center w-100 mb-3">
+          <div class="w-100 mb-3 d-flex align-items-center justify-content-center flex-grow-1">
             <img id="latest-output" class="img-fluid" src="/latest_output">
           </div>
         </div>
@@ -96,23 +87,18 @@
       document.addEventListener('DOMContentLoaded', function() {
         const generateImage = () => {
           document.querySelector('#generate').disabled = true;
-          document.querySelector('#update').disabled = true;
           document.querySelector('#generate').innerText = 'Generating...';
-          // put total elapsed time in #time-elapsed until complete, then wipe it
+          document.querySelector('#update').disabled = true;
           const start = new Date().getTime();
-          const timer = setInterval(function() {
-            document.querySelector('#time-elapsed').innerText = 'Elapsed: ' + (new Date().getTime() - start) / 1000 + 's';
-          }, 1000);
           fetch('/generate')
             .then(function(response) {
               return response.text();
             })
             .then(function(data) {
               document.querySelector('#generate').disabled = false;
-              document.querySelector('#update').disabled = false;
               document.querySelector('#generate').innerText = 'Generate';
+              document.querySelector('#update').disabled = false;
               document.querySelector('#output').src = '/outputs';
-              document.querySelector('#time-elapsed').innerText = '';
               clearInterval(timer);
               if (document.querySelector('#continuous-gen').checked) {
                 generateImage();

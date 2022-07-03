@@ -7,7 +7,16 @@ import os
 import json
 import subprocess
 
-from flask import Blueprint, Flask, render_template, send_from_directory, request, redirect, send_file
+from flask import (
+    Blueprint,
+    Flask,
+    render_template,
+    send_from_directory,
+    request,
+    redirect,
+    send_file,
+)
+from PIL import Image
 
 from .check import check_files_and_folders
 
@@ -19,7 +28,7 @@ web = Blueprint("web", __name__, template_folder="templates")
 def index():
     current_config = open("/data/config.json", "r").read()
     current_config = json.loads(current_config)
-    current_config['prompts'] = ", ".join(current_config['prompts'])
+    current_config["prompts"] = ", ".join(current_config["prompts"])
     return render_template("index.html", current_config=current_config)
 
 
@@ -35,8 +44,8 @@ def outputs():
     files.sort(key=lambda x: -os.path.getmtime("/data/outputs/" + x))
 
     # remove 'steps' from the list of directories
-    if 'steps' in files:
-        files.remove('steps')
+    if "steps" in files:
+        files.remove("steps")
 
     # create a list of links to the outputs
     links = []
@@ -44,8 +53,18 @@ def outputs():
         date = os.path.getmtime("/data/outputs/" + file)
         date = datetime.datetime.fromtimestamp(date).strftime("%Y-%m-%d %H:%M:%S")
         id = file.split("--")[0]
-        title = ' '.join(file.split("--")[1].split('.')[0].split('-'))
-        links.append({"file": "/outputs/" + file, "date": date, "id" : id, "title": title})
+        title = " ".join(file.split("--")[1].split(".")[0].split("-"))
+        width, height = Image.open("/data/outputs/" + file).size
+        links.append(
+            {
+                "file": "/outputs/" + file,
+                "date": date,
+                "id": id,
+                "title": title,
+                "width": width,
+                "height": height,
+            }
+        )
 
     return render_template("outputs.html", links=links)
 

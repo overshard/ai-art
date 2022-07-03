@@ -17,5 +17,4 @@ VOLUME /data
 
 ENV FLASK_APP=scripts/web.py
 
-# CMD ["python", "-m", "scripts.generate", "-c", "/data/config.json"]
 CMD ["flask", "run", "--port", "3000", "--host", "0.0.0.0"]
