@@ -21,10 +21,15 @@
   <body class="d-flex flex-column">
     <div class="container-fluid d-flex flex-grow-1">
       <div class="row flex-grow-1">
-        <div class="col-sm-8 d-flex p-0">
-          <iframe id="output" src="/outputs"></iframe>
-        </div>
         <div class="col-sm-4 bg-black overflow-auto d-flex flex-column">
+          <h1 class="display-5 text-white py-2 d-flex justify-content-between align-items-center">
+            <span>🖼️ AI-Art</span>
+            <a href="https://github.com/overshard/ai-art" target="_blank" class="text-white" style="line-height: 0;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-github" viewBox="0 0 16 16">
+                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+              </svg>
+            </a>
+          </h1>
           <form method="POST" action="/update_config" class="my-4" enctype="multipart/form-data">
             <div class="form-floating mb-3">
               <textarea type="text" id="prompts" name="prompts" class="form-control" style="height: 150px;">{{ current_config.prompts }}</textarea>
@@ -55,22 +60,27 @@
                   <label for="height">Height</label>
                 </div>
               </div>
-            </div>
-            <div class="form-floating mb-3">
-              <input type="number" id="max_iterations" name="max_iterations" value="{{ current_config.max_iterations }}" class="form-control" placeholder="Max iterations">
-              <label for="max_iterations">Max iterations</label>
+              <div class="col">
+                <div class="form-floating mb-3">
+                  <input type="number" id="max_iterations" name="max_iterations" value="{{ current_config.max_iterations }}" class="form-control" placeholder="Iterations">
+                  <label for="max_iterations">Iterations</label>
+                </div>
+              </div>
             </div>
             <div class="ms-auto d-flex justify-content-between">
-              <button id="update" type="submit" class="btn btn-success btn-sm">Update</button>
+              <button id="update" type="submit" class="btn btn-danger">Update</button>
               <label class="text-white d-flex align-items-center">
                 <input type="checkbox" id="continuous-gen" value="true" class="me-2"> Continuous generation
               </label>
-              <button id="generate" type="button" class="btn btn-primary btn-sm ms-4">Generate</button>
+              <button id="generate" type="button" class="btn btn-success">Generate</button>
             </div>
           </form>
           <div class="w-100 mb-3 d-flex align-items-center justify-content-center flex-grow-1">
             <img id="latest-output" class="img-fluid" src="/latest_output">
           </div>
+        </div>
+        <div class="col-sm-8 d-flex p-0">
+          <iframe id="output" src="/outputs"></iframe>
         </div>
       </div>
     </div>

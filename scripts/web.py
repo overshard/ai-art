@@ -49,7 +49,7 @@ def outputs():
 
     # create a list of links to the outputs
     links = []
-    for file in files:
+    for file in files[:25]:
         date = os.path.getmtime("/data/outputs/" + file)
         date = datetime.datetime.fromtimestamp(date).strftime("%Y-%m-%d %H:%M:%S")
         id = file.split("--")[0]
